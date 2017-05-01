@@ -102,10 +102,44 @@ def updatePBXBuildFileSection(text, order):
 
 ##### PBXFileReference Section
 
+### Regexes
+
+PBXFileReferenceSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXFileReference\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXFileReference\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
+# 1 = Beginning of file
+# 2 = PBXGroup section header
+# 3 = PBXGroup section body
+# 4 = PBXGroup section footer
+# 5 = End of file
+
+PBXFileReferenceSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
+# 1 = (start of file / newline)
+# 2 = (value)
+# 3 = PBXBuildFile reference ID
+# 4 = PBXBuildFile name
+# 5 = PBXBuildFile dictionary
+
 ### Functions
 
 def updatePBXFileReferenceSection(text, order):
-    return text
+    pbxFileReferenceSectionBody = re.search(PBXFileReferenceSectionRegex, text).group(3)
+    pbxFileReferenceSectionLines = re.findall(PBXFileReferenceSectionLineRegex, pbxFileReferenceSectionBody)
+    elements = {}
+    for line in pbxFileReferenceSectionLines:
+        fileRef = line[2]
+        value = line[1]
+        elements[fileRef] = value
+    orderCopy = list(order)
+    array = []
+    while len(orderCopy) > 0:
+        item = orderCopy.pop(0)
+        if PBXGroupSectionChildrenKey in item:
+            orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
+        elif item in elements:
+            value = elements[item]
+            array.append(value)
+    pbxFileReferenceSectionBody = "\n".join(array)
+    updatedText = re.sub(PBXFileReferenceSectionRegex, r"\1\2" + pbxFileReferenceSectionBody + r"\4\5", text, flags=re.IGNORECASE)
+    return updatedText
 
 ##### PBXFrameworksBuildPhase Section
 
