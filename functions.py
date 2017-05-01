@@ -95,10 +95,56 @@ def generateChildren(node, source):
 
 ##### PBXBuildFile Section
 
+### Constants
+
+# PBXBuildFileSectionIdKey = "id"
+# PBXBuildFileSectionFileRefKey = "fileRef"
+# PBXBuildFileSectionValueKey = "value"
+# PBXBuildFileSectionNameKey = "name"
+# PBXBuildFileSectionDirectoryKey = "directory"
+# PBXBuildFileSectionDictionaryKey = "dictionary"
+
+### Regexes
+
+PBXBuildFileSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXBuildFile\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXBuildFile\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
+# 1 = Beginning of file
+# 2 = PBXBuildFile section header
+# 3 = PBXBuildFile section body
+# 4 = PBXBuildFile section footer
+# 5 = End of file
+
+PBXBuildFileSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
+# 1 = (start of file / newline)
+# 2 = (value)
+# 3 = PBXBuildFile ID
+# 4 = PBXBuildFile name and directory
+# 5 = PBXBuildFile dictionary
+
+PBXBuildFileSectionFileRefRegex = r"fileRef\s*=\s*(\w+)"
+# 1 = PBXBuildFile fileRef
+
 ### Functions
 
 def updatePBXBuildFileSection(text, order):
-    return text
+    pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(3)
+    pbxBuildFileSections = re.findall(PBXBuildFileSectionLineRegex, pbxBuildFileSectionBody)
+    elements = {}
+    for section in pbxBuildFileSections:
+        fileRef = re.search(PBXBuildFileSectionFileRefRegex, section[4]).group(1)
+        value = section[1]
+        elements[fileRef] = value
+    orderCopy = list(order)
+    array = []
+    while len(orderCopy) > 0:
+        item = orderCopy.pop(0)
+        if PBXGroupSectionChildrenKey in item:
+            orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
+        elif item in elements:
+            value = elements[item]
+            array.append(value)
+    pbxBuildFileSectionBody = "\n".join(array)
+    updatedText = re.sub(PBXBuildFileSectionRegex, r"\1\2" + pbxBuildFileSectionBody + r"\4\5", text, flags=re.IGNORECASE)
+    return updatedText
 
 ##### PBXFileReference Section
 
