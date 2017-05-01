@@ -10,11 +10,30 @@
 
 import re
 
-##### PBXProj Order
+##### Shared
 
 ### Constants
 
 PBXGroupSectionChildrenKey = "children"
+
+### Functions
+
+def sortElements(elements, order):
+    orderCopy = list(order)
+    sortedArray = []
+    while len(orderCopy) > 0:
+        item = orderCopy.pop(0)
+        if PBXGroupSectionChildrenKey in item:
+            orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
+        elif item in elements:
+            value = elements[item]
+            sortedArray.append(value)
+    return sortedArray
+
+##### PBXProj Order
+
+### Constants
+
 PBXGroupSectionNameKey = "name" # temp
 PBXGroupSectionIdKey = "id"
 
