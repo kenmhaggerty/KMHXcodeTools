@@ -9,7 +9,6 @@
 ##### IMPORTS
 
 from functions import *
-import json # temp
 
 ##### INPUTS
 
@@ -38,10 +37,6 @@ text = updatePBXFrameworksBuildPhaseSection(text, order)
 text = updatePBXGroupSection(text, order)
 text = updatePBXResourcesBuildPhaseSection(text, order)
 text = updatePBXSourcesBuildPhaseSection(text, order)
-
-### Debugging
-
-print json.dumps(order, sort_keys=True, indent=4, separators=(',', ': '))
 
 ### Save To File
 
