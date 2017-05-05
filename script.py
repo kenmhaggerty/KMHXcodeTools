@@ -4,45 +4,45 @@
 # script.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 Apr 28
+# EDITED:  2017 May 05
 
 ##### IMPORTS
 
+import glob
 from functions import *
-
-##### INPUTS
-
-filename = "Sample.xcodeproj/project.pbxproj"
-
-##### CONSTANTS
-
-directory = "source/"
 
 ##### CODE
 
 print "---------- STARTING PYTHON ----------"
 
-### Input
+### Obtain .xcodeproj files
 
-file = open(directory + filename, "r+")
-text = "".join(file)
+projects = glob.glob("*.xcodeproj")
 
-### Processing
+for project in projects:
 
-order = processPBXProjOrder(text)
+    ### Input
 
-text = updatePBXBuildFileSection(text, order)
-text = updatePBXFileReferenceSection(text, order)
-text = updatePBXFrameworksBuildPhaseSection(text, order)
-text = updatePBXGroupSection(text, order)
-text = updatePBXResourcesBuildPhaseSection(text, order)
-text = updatePBXSourcesBuildPhaseSection(text, order)
+    filename = project + "/project.pbxproj"
+    file = open(filename, "r+")
+    text = "".join(file)
 
-### Save To File
+    ### Processing
 
-# file.seek(0)
-# file.write(text)
-# file.truncate()
-# file.close()
+    order = processPBXProjOrder(text)
+
+    text = updatePBXBuildFileSection(text, order)
+    text = updatePBXFileReferenceSection(text, order)
+    text = updatePBXFrameworksBuildPhaseSection(text, order)
+    text = updatePBXGroupSection(text, order)
+    text = updatePBXResourcesBuildPhaseSection(text, order)
+    text = updatePBXSourcesBuildPhaseSection(text, order)
+
+    ### Save To File
+
+    # file.seek(0)
+    # file.write(text)
+    # file.truncate()
+    # file.close()
 
 print "---------- PYTHON COMPLETE ----------"
