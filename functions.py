@@ -4,19 +4,40 @@
 # functions.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 May 01
+# EDITED:  2017 May 02
 
 ##### IMPORTS
 
 import re
 
-##### PBXProj Order
+##### Shared
 
 ### Constants
 
 PBXGroupSectionChildrenKey = "children"
+PBXGroupSectionIdKey = "fileRef"
+
+### Functions
+
+def sortElements(elements, order):
+    orderCopy = list(order)
+    sortedArray = []
+    while len(orderCopy) > 0:
+        item = orderCopy.pop(0)
+        fileRef = item[PBXGroupSectionIdKey]
+        if PBXGroupSectionChildrenKey in item:
+            orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
+        elif fileRef in elements:
+            value = elements[fileRef]
+            sortedArray.append(value)
+    return sortedArray
+
+##### PBXProj Order
+
+### Constants
+
 PBXGroupSectionNameKey = "name" # temp
-PBXGroupSectionIdKey = "id"
+PBXBuildSectionIdKey = "id"
 
 ### Regexes
 
@@ -27,47 +48,79 @@ PBXGroupSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXGroup\s+section\s*\*\/s*[^
 # 4 = PBXGroup section footer
 # 5 = End of file
 
-PBXGroupSectionGroupRegex = r"(.*=.*\{[^\}]*\}\;[\s]*)(\n|$)+"
-# 1 = PBXGroup section
-# 2 = (newline / end of file)
-
-PBXGroupSectionIdRegex = r"^\s*(\w+)"
-# 1 = PBXGroup ID
+PBXGroupSectionGroupRegex = r"(^|\n)([^\n\w]*(\w*)\s*(\/\*\s*(.*)\s*\*\/){0,1}\s*=\s*(\{[^\}]*\})\s*;[^\n]*)"
+# 1 = (start of file / newline)
+# 2 = (value)
+# 3 = PBXGroupSection fileRef
+# 4 = (unused)
+# 5 = PBXGroupSection name # temp
+# 6 = PBXGroupSection dictionary
 
 PBXGroupSectionChildrenRegex = r"children\s*=\s*\(([^\)\;]*)\)\;"
 # 1 = PBXGroup children
 
-PBXGroupSectionChildIdRegex = r"(^|\n)\s*(\w+)"
+PBXGroupSectionChildRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*((\S+.*\.\S+)|\S+[^\*\/]*).*\*\/)\s*,[^\n]*)"
 # 1 = (start of file / newline)
-# 2 = PBXGroup child ID
+# 2 = (value)
+# 3 = PBXGroupSection child fileRef
+# 4 = PBXGroupSection name and directory # temp
+# 5 = PBXGroupSection name # temp
+# 6 = (unused)
 
-PBXGroupSectionNameRegex = r"^.*\/\*\s*((\S+.*\.\S+)|\S+[^\*\/]*).*\*\/" # temp
-# 1 = PBXGroup name
-# 2 = (unused)
+PBXBuildFileSectionRegex = r"\/\*\s*Begin\s*PBXBuildFile\s*section\s*\*\/\n*([\S\s]*)\n*\/\*\s*End\s*PBXBuildFile\s*section\s*\*\/"
+# 1 = PBXBuildFileSection body
+
+PBXBuildFileSectionLineRegex = r"(^|\n)\s*(\w*).*=\s*\{.*fileRef\s*=\s*(\w+).*\};"
+# 1 = (start of file / newline)
+# 2 = PBXBuildFile ID
+# 3 = PBXBuildFile fileRef
 
 ### Functions
 
 def processPBXProjOrder(text):
     pbxGroupSectionBody = re.search(PBXGroupSectionRegex, text).group(3)
-    pbxGroupSections = list(map(lambda x: x[0], re.findall(PBXGroupSectionGroupRegex, pbxGroupSectionBody)))
+    pbxGroupSections = re.findall(PBXGroupSectionGroupRegex, pbxGroupSectionBody)
+    pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(1)
+    pbxBuildFileSectionLines = re.findall(PBXBuildFileSectionLineRegex, pbxBuildFileSectionBody)
+    fileRefDictionary = {}
+    for line in pbxBuildFileSectionLines:
+        fileRef = line[2]
+        fileId = line[1]
+        fileRefDictionary[fileRef] = fileId
     elements = {}
     parentIds = set([])
     childrenIds = set([])
     for section in pbxGroupSections:
-        sectionId = re.search(PBXGroupSectionIdRegex, section).group(1)
-        childrenBody = re.search(PBXGroupSectionChildrenRegex, section).group(1)
-        childIds = list(map(lambda x: x[1], re.findall(PBXGroupSectionChildIdRegex, childrenBody)))
+        fileRef = section[2]
+        dictionary = section[5]
+        children = re.search(PBXGroupSectionChildrenRegex, dictionary).group(1)
+        children = re.findall(PBXGroupSectionChildRegex, children)
+        childDictionaries = []
+        for child in children:
+            childFileRef = child[2]
+            childName = child[4]
+            dictionary = {
+                PBXGroupSectionIdKey : childFileRef,
+                PBXGroupSectionNameKey : childName
+            }
+            try:
+                fileId = fileRefDictionary[childFileRef]
+                dictionary[PBXBuildSectionIdKey] = fileId
+            except Exception:
+                pass
+            childDictionaries.append(dictionary)
+        children = list(map(lambda x: x[2], children))
         dictionary = {}
-        if len(childIds) > 0:
-            dictionary[PBXGroupSectionChildrenKey] = childIds
+        if len(childDictionaries) > 0:
+            dictionary[PBXGroupSectionChildrenKey] = childDictionaries
         try: # temp
-            name = re.search(PBXGroupSectionNameRegex, section).group(1)
+            name = section[4]
             dictionary[PBXGroupSectionNameKey] = name
         except Exception: 
             pass
-        elements[sectionId] = dictionary
-        parentIds.update([sectionId])
-        childrenIds.update(childIds)
+        elements[fileRef] = dictionary
+        parentIds.update([fileRef])
+        childrenIds.update(children)
     parents = parentIds - childrenIds
     pbxProjOrder = []
     for parent in parents:
@@ -85,9 +138,10 @@ def generateChildren(node, source):
     i = 0
     while i < len(children):
         child = children[i]
-        if child in source:
+        childFileRef = child[PBXGroupSectionIdKey]
+        if childFileRef in source:
             children.pop(i)
-            grandchildren = generateChildren(child, source)
+            grandchildren = generateChildren(childFileRef, source)
             children.insert(i, grandchildren)
         i += 1
     dictionary[PBXGroupSectionChildrenKey] = children
