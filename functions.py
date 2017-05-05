@@ -203,13 +203,6 @@ def updatePBXBuildFileSection(text, order):
 
 ### Regexes
 
-PBXFileReferenceSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXFileReference\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXFileReference\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
-# 1 = Beginning of file
-# 2 = PBXGroup section header
-# 3 = PBXGroup section body
-# 4 = PBXGroup section footer
-# 5 = End of file
-
 PBXFileReferenceSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
 # 1 = (start of file / newline)
 # 2 = (value)
@@ -220,6 +213,7 @@ PBXFileReferenceSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/
 ### Functions
 
 def updatePBXFileReferenceSection(text, order):
+    PBXFileReferenceSectionRegex = generateSectionRegex("PBXFileReference")
     pbxFileReferenceSectionBody = re.search(PBXFileReferenceSectionRegex, text).group(3)
     pbxFileReferenceSectionLines = re.findall(PBXFileReferenceSectionLineRegex, pbxFileReferenceSectionBody)
     elements = {}
