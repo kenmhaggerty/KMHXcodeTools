@@ -28,7 +28,7 @@ def sortElements(elements, order):
         fileRef = item[PBXGroupSectionIdKey]
         if PBXGroupSectionChildrenKey in item:
             orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
-        elif fileRef in elements:
+        if fileRef in elements:
             value = elements[fileRef]
             sortedArray.append(value)
         elif PBXBuildSectionIdKey in item:
@@ -186,7 +186,6 @@ def updatePBXGroupSection(text, order):
         value = section[1]
         elements[fileRef] = value
     sortedArray = sortElements(elements, order)
-    print sortedArray
     pbxGroupSectionBody = "\n".join(sortedArray)
     updatedText = re.sub(PBXGroupSectionRegex, r"\1\2" + pbxGroupSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
