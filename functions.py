@@ -203,7 +203,7 @@ def updatePBXFrameworksBuildPhaseSection(text, order):
         elements[fileRef] = value
     sortedArray = sortElements(elements, order)
     filesString = "\n".join(sortedArray)
-    pbxFrameworksBuildPhaseSectionBody = re.sub(PBXFrameworksBuildPhaseFilesRegex, r"\1\2" + filesString + r"\4\5", ___, flags=re.IGNORECASE)
+    pbxFrameworksBuildPhaseSectionBody = re.sub(PBXFrameworksBuildPhaseFilesRegex, r"\1\2" + filesString + r"\4\5", pbxFrameworksBuildPhaseSectionBody, flags=re.IGNORECASE)
     updatedText = re.sub(PBXFrameworksBuildPhaseSectionRegex, r"\1\2" + pbxFrameworksBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
