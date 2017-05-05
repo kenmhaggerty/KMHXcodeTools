@@ -182,16 +182,8 @@ def updatePBXFileReferenceSection(text, order):
         fileRef = line[2]
         value = line[1]
         elements[fileRef] = value
-    orderCopy = list(order)
-    array = []
-    while len(orderCopy) > 0:
-        item = orderCopy.pop(0)
-        if PBXGroupSectionChildrenKey in item:
-            orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
-        elif item in elements:
-            value = elements[item]
-            array.append(value)
-    pbxFileReferenceSectionBody = "\n".join(array)
+    sortedArray = sortElements(elements, order)
+    pbxFileReferenceSectionBody = "\n".join(sortedArray)
     updatedText = re.sub(PBXFileReferenceSectionRegex, r"\1\2" + pbxFileReferenceSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
