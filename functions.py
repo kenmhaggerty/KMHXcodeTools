@@ -16,6 +16,7 @@ import re
 
 PBXGroupSectionChildrenKey = "children"
 PBXGroupSectionIdKey = "fileRef"
+PBXBuildSectionIdKey = "id"
 
 ### Functions
 
@@ -30,6 +31,11 @@ def sortElements(elements, order):
         elif fileRef in elements:
             value = elements[fileRef]
             sortedArray.append(value)
+        elif PBXBuildSectionIdKey in item:
+            buildId = item[PBXBuildSectionIdKey]
+            if buildId in elements:
+                value = elements[buildId]
+                sortedArray.append(value)
     return sortedArray
 
 ##### PBXProj Order
@@ -37,7 +43,6 @@ def sortElements(elements, order):
 ### Constants
 
 PBXGroupSectionNameKey = "name" # temp
-PBXBuildSectionIdKey = "id"
 
 ### Regexes
 
