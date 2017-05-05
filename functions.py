@@ -173,7 +173,18 @@ def updatePBXFrameworksBuildPhaseSection(text, order):
 ### Functions
 
 def updatePBXGroupSection(text, order):
-    return text
+    pbxGroupSectionBody = re.search(PBXGroupSectionRegex, text).group(3)
+    pbxGroupSections = re.findall(PBXGroupSectionGroupRegex, pbxGroupSectionBody)
+    elements = {}
+    for section in pbxGroupSections:
+        fileRef = section[2]
+        value = section[1]
+        elements[fileRef] = value
+    sortedArray = sortElements(elements, order)
+    print sortedArray
+    pbxGroupSectionBody = "\n".join(sortedArray)
+    updatedText = re.sub(PBXGroupSectionRegex, r"\1\2" + pbxGroupSectionBody + r"\4\5", text, flags=re.IGNORECASE)
+    return updatedText
 
 ##### PBXResourcesBuildPhase Section
 
