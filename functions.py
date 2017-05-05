@@ -173,13 +173,6 @@ def generateChildren(node, source):
 
 ### Regexes
 
-PBXBuildFileSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXBuildFile\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXBuildFile\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
-# 1 = Beginning of file
-# 2 = PBXBuildFile section header
-# 3 = PBXBuildFile section body
-# 4 = PBXBuildFile section footer
-# 5 = End of file
-
 PBXBuildFileSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
 # 1 = (start of file / newline)
 # 2 = (value)
@@ -193,6 +186,7 @@ PBXBuildFileSectionFileRefRegex = r"fileRef\s*=\s*(\w+)"
 ### Functions
 
 def updatePBXBuildFileSection(text, order):
+    PBXBuildFileSectionRegex = generateSectionRegex("PBXBuildFile")
     pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(3)
     pbxBuildFileSections = re.findall(PBXBuildFileSectionLineRegex, pbxBuildFileSectionBody)
     elements = {}
