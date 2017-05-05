@@ -290,10 +290,46 @@ def updatePBXGroupSection(text, order):
 
 ##### PBXResourcesBuildPhase Section
 
+### Constants
+
+### Regexes
+
+PBXResourcesBuildPhaseSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXResourcesBuildPhase\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXResourcesBuildPhase\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
+# 1 = Beginning of file
+# 2 = PBXResourcesBuildPhase section header
+# 3 = PBXResourcesBuildPhase section body
+# 4 = PBXResourcesBuildPhase section footer
+# 5 = End of file
+
+PBXResourcesBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
+# 1 = (start of file)
+# 2 = PBXFrameworksBuildPhase files start
+# 3 = PBXFrameworksBuildPhase files body
+# 4 = PBXFrameworksBuildPhase files end
+# 5 = (end of file)
+
+PBXResourcesBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
+# 1 = (start of file / newline)
+# 2 = (value)
+# 3 = PBXFrameworksBuildPhase fileRef
+# 4 = PBXFrameworksBuildPhase file name and directory
+
 ### Functions
 
 def updatePBXResourcesBuildPhaseSection(text, order):
-    return text
+    pbxResourcesBuildPhaseSectionBody = re.search(PBXResourcesBuildPhaseSectionRegex, text).group(3)
+    pbxResourcesBuildPhaseSectionFilesBody = re.search(PBXResourcesBuildPhaseFilesRegex, pbxResourcesBuildPhaseSectionBody).group(3)
+    pbxResourcesBuildPhaseSectionFiles = re.findall(PBXResourcesBuildPhaseFileRegex, pbxResourcesBuildPhaseSectionFilesBody)
+    elements = {}
+    for file in pbxResourcesBuildPhaseSectionFiles:
+        fileRef = file[2]
+        value = file[1]
+        elements[fileRef] = value
+    sortedArray = sortElements(elements, order)
+    pbxResourcesBuildPhaseSectionFilesBody = "\n".join(sortedArray)
+    pbxResourcesBuildPhaseSectionBody = re.sub(PBXResourcesBuildPhaseFilesRegex, r"\1\2" + pbxResourcesBuildPhaseSectionFilesBody + r"\4\5", pbxResourcesBuildPhaseSectionBody, flags=re.IGNORECASE)
+    updatedText = re.sub(PBXResourcesBuildPhaseSectionRegex, r"\1\2" + pbxResourcesBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
+    return updatedText
 
 ##### PBXSourcesBuildPhase Section
 
