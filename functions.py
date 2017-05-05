@@ -15,6 +15,7 @@ import re
 ### Constants
 
 PBXGroupSectionChildrenKey = "children"
+PBXGroupSectionIdKey = "fileRef"
 
 ### Functions
 
@@ -23,10 +24,11 @@ def sortElements(elements, order):
     sortedArray = []
     while len(orderCopy) > 0:
         item = orderCopy.pop(0)
+        fileRef = item[PBXGroupSectionIdKey]
         if PBXGroupSectionChildrenKey in item:
             orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
-        elif item in elements:
-            value = elements[item]
+        elif fileRef in elements:
+            value = elements[fileRef]
             sortedArray.append(value)
     return sortedArray
 
@@ -35,7 +37,6 @@ def sortElements(elements, order):
 ### Constants
 
 PBXGroupSectionNameKey = "name" # temp
-PBXGroupSectionIdKey = "fileRef"
 PBXBuildSectionIdKey = "id"
 
 ### Regexes
