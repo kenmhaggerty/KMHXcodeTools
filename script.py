@@ -40,9 +40,9 @@ text = updatePBXSourcesBuildPhaseSection(text, order)
 
 ### Save To File
 
-# file.seek(0)
-# file.write(text)
-# file.truncate()
-# file.close()
+file.seek(0)
+file.write(text)
+file.truncate()
+file.close()
 
 print "---------- PYTHON COMPLETE ----------"
