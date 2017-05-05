@@ -187,16 +187,8 @@ def updatePBXBuildFileSection(text, order):
         fileRef = re.search(PBXBuildFileSectionFileRefRegex, section[4]).group(1)
         value = section[1]
         elements[fileRef] = value
-    orderCopy = list(order)
-    array = []
-    while len(orderCopy) > 0:
-        item = orderCopy.pop(0)
-        if PBXGroupSectionChildrenKey in item:
-            orderCopy = item[PBXGroupSectionChildrenKey] + orderCopy
-        elif item in elements:
-            value = elements[item]
-            array.append(value)
-    pbxBuildFileSectionBody = "\n".join(array)
+    sortedArray = sortElements(elements, order)
+    pbxBuildFileSectionBody = "\n".join(sortedArray)
     updatedText = re.sub(PBXBuildFileSectionRegex, r"\1\2" + pbxBuildFileSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
