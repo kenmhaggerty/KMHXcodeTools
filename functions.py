@@ -285,13 +285,6 @@ def updatePBXGroupSection(text, order):
 
 ### Regexes
 
-PBXResourcesBuildPhaseSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXResourcesBuildPhase\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXResourcesBuildPhase\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
-# 1 = Beginning of file
-# 2 = PBXResourcesBuildPhase section header
-# 3 = PBXResourcesBuildPhase section body
-# 4 = PBXResourcesBuildPhase section footer
-# 5 = End of file
-
 PBXResourcesBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
 # 1 = (start of file)
 # 2 = PBXFrameworksBuildPhase files start
@@ -308,6 +301,7 @@ PBXResourcesBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 ### Functions
 
 def updatePBXResourcesBuildPhaseSection(text, order):
+    PBXResourcesBuildPhaseSectionRegex = generateSectionRegex("PBXResourcesBuildPhase")
     pbxResourcesBuildPhaseSectionBody = re.search(PBXResourcesBuildPhaseSectionRegex, text).group(3)
     pbxResourcesBuildPhaseSectionFilesBody = re.search(PBXResourcesBuildPhaseFilesRegex, pbxResourcesBuildPhaseSectionBody).group(3)
     pbxResourcesBuildPhaseSectionFiles = re.findall(PBXResourcesBuildPhaseFileRegex, pbxResourcesBuildPhaseSectionFilesBody)
