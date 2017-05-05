@@ -4,7 +4,7 @@
 # functions.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 May 02
+# EDITED:  2017 May 05
 
 ##### IMPORTS
 
@@ -18,7 +18,21 @@ PBXGroupSectionChildrenKey = "children"
 PBXGroupSectionIdKey = "fileRef"
 PBXBuildSectionIdKey = "id"
 
+### Regexes
+
+PBXSectionRegex_1 = r"(^[\S\s]*)(\/\*\s*Begin\s+"
+PBXSectionRegex_2 = r"\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+"
+PBXSectionRegex_3 = r"\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
+# 1 = Beginning of file
+# 2 = PBXSection header
+# 3 = PBXSection body
+# 4 = PBXSection footer
+# 5 = End of file
+
 ### Functions
+
+def generateSectionRegex(section):
+    return PBXSectionRegex_1 + section + PBXSectionRegex_2 + section + PBXSectionRegex_3
 
 def sortElements(elements, order):
     orderCopy = list(order)
@@ -45,13 +59,6 @@ def sortElements(elements, order):
 PBXGroupSectionNameKey = "name" # temp
 
 ### Regexes
-
-PBXGroupSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXGroup\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXGroup\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
-# 1 = Beginning of file
-# 2 = PBXGroup section header
-# 3 = PBXGroup section body
-# 4 = PBXGroup section footer
-# 5 = End of file
 
 PBXGroupSectionGroupRegex = r"(^|\n)([^\n\w]*(\w*)\s*(\/\*\s*(.*)\s*\*\/){0,1}\s*=\s*(\{[^\}]*\})\s*;[^\n]*)"
 # 1 = (start of file / newline)
@@ -83,6 +90,7 @@ PBXBuildFileSectionLineRegex = r"(^|\n)\s*(\w*).*=\s*\{.*fileRef\s*=\s*(\w+).*\}
 ### Functions
 
 def processPBXProjOrder(text):
+    PBXGroupSectionRegex = generateSectionRegex("PBXGroup")
     pbxGroupSectionBody = re.search(PBXGroupSectionRegex, text).group(3)
     pbxGroupSections = re.findall(PBXGroupSectionGroupRegex, pbxGroupSectionBody)
     pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(1)
@@ -165,13 +173,6 @@ def generateChildren(node, source):
 
 ### Regexes
 
-PBXBuildFileSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXBuildFile\s+section\s*\*\/s*[^\n]*\n)([\S\s]*)(\n\s*\/\*\s*End\s+PBXBuildFile\s+section\s*\*\/s*[^\n]*)([\S\s]*$)"
-# 1 = Beginning of file
-# 2 = PBXBuildFile section header
-# 3 = PBXBuildFile section body
-# 4 = PBXBuildFile section footer
-# 5 = End of file
-
 PBXBuildFileSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
 # 1 = (start of file / newline)
 # 2 = (value)
@@ -185,6 +186,7 @@ PBXBuildFileSectionFileRefRegex = r"fileRef\s*=\s*(\w+)"
 ### Functions
 
 def updatePBXBuildFileSection(text, order):
+    PBXBuildFileSectionRegex = generateSectionRegex("PBXBuildFile")
     pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(3)
     pbxBuildFileSections = re.findall(PBXBuildFileSectionLineRegex, pbxBuildFileSectionBody)
     elements = {}
