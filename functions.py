@@ -266,6 +266,7 @@ def updatePBXFrameworksBuildPhaseSection(text, order):
 ### Functions
 
 def updatePBXGroupSection(text, order):
+    PBXGroupSectionRegex = generateSectionRegex("PBXGroup")
     pbxGroupSectionBody = re.search(PBXGroupSectionRegex, text).group(3)
     pbxGroupSections = re.findall(PBXGroupSectionGroupRegex, pbxGroupSectionBody)
     elements = {}
