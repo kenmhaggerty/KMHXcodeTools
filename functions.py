@@ -179,7 +179,7 @@ PBXFrameworksBuildPhaseSectionRegex = r"(^[\S\s]*)(\/\*\s*Begin\s+PBXFrameworksB
 # 4 = PBXFrameworksBuildPhase section footer
 # 5 = End of file
 
-PBXFrameworksBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\()([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
+PBXFrameworksBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
 # 1 = (start of file)
 # 2 = PBXFrameworksBuildPhase files start
 # 3 = PBXFrameworksBuildPhase files body
