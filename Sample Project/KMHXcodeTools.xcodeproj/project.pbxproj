@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7D94AE651EC108BA00E09BFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D94AE641EC108BA00E09BFC /* main.m */; };
-		7D94AE681EC108BA00E09BFC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D94AE671EC108BA00E09BFC /* AppDelegate.m */; };
-		7D94AE6B1EC108BA00E09BFC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D94AE6A1EC108BA00E09BFC /* ViewController.m */; };
 		7D94AE701EC108BA00E09BFC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D94AE6F1EC108BA00E09BFC /* Assets.xcassets */; };
 		7DE9BE151EC109510055B747 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DE9BE131EC109510055B747 /* LaunchScreen.storyboard */; };
 		7DE9BE161EC109510055B747 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DE9BE141EC109510055B747 /* Main.storyboard */; };
+		7D94AE681EC108BA00E09BFC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D94AE671EC108BA00E09BFC /* AppDelegate.m */; };
+		7D94AE6B1EC108BA00E09BFC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D94AE6A1EC108BA00E09BFC /* ViewController.m */; };
+		7D94AE651EC108BA00E09BFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D94AE641EC108BA00E09BFC /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7D94AE601EC108BA00E09BFC /* KMHXcodeTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KMHXcodeTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7D94AE641EC108BA00E09BFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7D94AE6F1EC108BA00E09BFC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7DE9BE131EC109510055B747 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7DE9BE141EC109510055B747 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		7D94AE661EC108BA00E09BFC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7D94AE671EC108BA00E09BFC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		7D94AE691EC108BA00E09BFC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		7D94AE6A1EC108BA00E09BFC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		7D94AE6F1EC108BA00E09BFC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D94AE741EC108BA00E09BFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7DE9BE131EC109510055B747 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		7DE9BE141EC109510055B747 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		7D94AE641EC108BA00E09BFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7D94AE601EC108BA00E09BFC /* KMHXcodeTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KMHXcodeTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,14 +47,6 @@
 			);
 			sourceTree = "<group>";
 		};
-		7D94AE611EC108BA00E09BFC /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				7D94AE601EC108BA00E09BFC /* KMHXcodeTools.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		7D94AE621EC108BA00E09BFC /* KMHXcodeTools */ = {
 			isa = PBXGroup;
 			children = (
@@ -68,13 +60,13 @@
 			path = KMHXcodeTools;
 			sourceTree = "<group>";
 		};
-		7D94AE631EC108BA00E09BFC /* Supporting Files */ = {
+		7DE9BE121EC109340055B747 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				7D94AE741EC108BA00E09BFC /* Info.plist */,
-				7D94AE641EC108BA00E09BFC /* main.m */,
+				7DE9BE131EC109510055B747 /* LaunchScreen.storyboard */,
+				7DE9BE141EC109510055B747 /* Main.storyboard */,
 			);
-			path = "Supporting Files";
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 		7DE9BE111EC108E40055B747 /* View Controllers */ = {
@@ -86,13 +78,21 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
-		7DE9BE121EC109340055B747 /* Storyboards */ = {
+		7D94AE631EC108BA00E09BFC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				7DE9BE131EC109510055B747 /* LaunchScreen.storyboard */,
-				7DE9BE141EC109510055B747 /* Main.storyboard */,
+				7D94AE741EC108BA00E09BFC /* Info.plist */,
+				7D94AE641EC108BA00E09BFC /* main.m */,
 			);
-			path = Storyboards;
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7D94AE611EC108BA00E09BFC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7D94AE601EC108BA00E09BFC /* KMHXcodeTools.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
