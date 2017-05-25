@@ -259,12 +259,12 @@ def updatePBXFrameworksBuildPhaseSection(text, order):
     pbxFrameworksBuildPhaseSections = re.findall(PBXFrameworksBuildPhaseSectionsRegex, pbxFrameworksBuildPhaseSectionBody)
     for section in pbxFrameworksBuildPhaseSections:
         value = section[0]
-        pbxFrameworksBuildPhaseFiles = re.findall(PBXFrameworksBuildPhaseFileRegex, section[5])
+        pbxFrameworksBuildPhaseSectionFiles = re.findall(PBXFrameworksBuildPhaseFileRegex, section[5])
         elements = {}
-        for file in pbxFrameworksBuildPhaseFiles:
+        for file in pbxFrameworksBuildPhaseSectionFiles:
             fileRef = file[2]
-            value = file[1]
-            elements[fileRef] = value
+            fileValue = file[1]
+            elements[fileRef] = fileValue
         sortedArray = sortElements(elements, order)
         filesString = "\n".join(sortedArray)
         updatedSection = re.sub(PBXFrameworksBuildPhaseFilesRegex, r"\1" + filesString + r"\3", value, flags=re.IGNORECASE)
@@ -296,12 +296,13 @@ def updatePBXGroupSection(text, order):
 
 ### Regexes
 
-PBXResourcesBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
-# 1 = (start of file)
-# 2 = PBXFrameworksBuildPhase files start
-# 3 = PBXFrameworksBuildPhase files body
-# 4 = PBXFrameworksBuildPhase files end
-# 5 = (end of file)
+PBXResourcesBuildPhaseSectionsRegex = r"(([ \t]*(\w*)[ \t]*(\/\*.*\*\/)[ \t]*=[ \t]*\{[^\}]*files[ \t]*=[ \t]*\(\n?)([^\)]*,[ \t]*)?\s*\n([^\}]*\}[ \t]*;))"
+# 1 = (value)
+# 2 = (start of file)
+# 3 = PBXResourcesBuildPhase section ID
+# 4 = PBXResourcesBuildPhase section name
+# 5 = PBXResourcesBuildPhase section files
+# 6 = (end of file)
 
 PBXResourcesBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 # 1 = (start of file / newline)
@@ -314,16 +315,19 @@ PBXResourcesBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 def updatePBXResourcesBuildPhaseSection(text, order):
     PBXResourcesBuildPhaseSectionRegex = generateSectionRegex("PBXResourcesBuildPhase")
     pbxResourcesBuildPhaseSectionBody = re.search(PBXResourcesBuildPhaseSectionRegex, text).group(3)
-    pbxResourcesBuildPhaseSectionFilesBody = re.search(PBXResourcesBuildPhaseFilesRegex, pbxResourcesBuildPhaseSectionBody).group(3)
-    pbxResourcesBuildPhaseSectionFiles = re.findall(PBXResourcesBuildPhaseFileRegex, pbxResourcesBuildPhaseSectionFilesBody)
-    elements = {}
-    for file in pbxResourcesBuildPhaseSectionFiles:
-        fileRef = file[2]
-        value = file[1]
-        elements[fileRef] = value
-    sortedArray = sortElements(elements, order)
-    pbxResourcesBuildPhaseSectionFilesBody = "\n".join(sortedArray)
-    pbxResourcesBuildPhaseSectionBody = re.sub(PBXResourcesBuildPhaseFilesRegex, r"\1\2" + pbxResourcesBuildPhaseSectionFilesBody + r"\4\5", pbxResourcesBuildPhaseSectionBody, flags=re.IGNORECASE)
+    pbxResourcesBuildPhaseSections = re.findall(PBXResourcesBuildPhaseSectionsRegex, pbxResourcesBuildPhaseSectionBody)
+    for section in pbxResourcesBuildPhaseSections:
+        value = section[0]
+        pbxResourcesBuildPhaseSectionFiles = re.findall(PBXResourcesBuildPhaseFileRegex, section[4])
+        elements = {}
+        for file in pbxResourcesBuildPhaseSectionFiles:
+            fileRef = file[2]
+            fileValue = file[1]
+            elements[fileRef] = fileValue
+        sortedArray = sortElements(elements, order)
+        filesString = "\n".join(sortedArray)
+        updatedSection = re.sub(PBXResourcesBuildPhaseSectionsRegex, r"\2" + filesString + r"\6", value, flags=re.IGNORECASE);
+        pbxResourcesBuildPhaseSectionBody = re.sub(value, updatedSection, pbxResourcesBuildPhaseSectionBody, flags=re.IGNORECASE)
     updatedText = re.sub(PBXResourcesBuildPhaseSectionRegex, r"\1\2" + pbxResourcesBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
@@ -331,12 +335,13 @@ def updatePBXResourcesBuildPhaseSection(text, order):
 
 ### Regexes
 
-PBXSourcesBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
-# 1 = (start of file)
-# 2 = PBXSourcesBuildPhase files start
-# 3 = PBXSourcesBuildPhase files body
-# 4 = PBXSourcesBuildPhase files end
-# 5 = (end of file)
+PBXSourcesBuildPhaseSectionsRegex = r"(([ \t]*(\w*)[ \t]*(\/\*.*\*\/)[ \t]*=[ \t]*\{[ \t]*[^\}]*files[ \t]*=[ \t]*\([ \t]*)\n?([^\)]*,[ \t]*)?\s*\n([ \t]*\)[ \t]*;[^\}]*\}[ \t]*;))"
+# 1 = (value)
+# 2 = (start of file)
+# 3 = PBXSourcesBuildPhase section ID
+# 4 = PBXSourcesBuildPhase section name
+# 5 = PBXSourcesBuildPhase section files
+# 6 = (end of file)
 
 PBXSourcesBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 # 1 = (start of file / newline)
@@ -349,16 +354,19 @@ PBXSourcesBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 def updatePBXSourcesBuildPhaseSection(text, order):
     PBXSourcesBuildPhaseSectionRegex = generateSectionRegex("PBXSourcesBuildPhase")
     pbxSourcesBuildPhaseSectionBody = re.search(PBXSourcesBuildPhaseSectionRegex, text).group(3)
-    pbxSourcesBuildPhaseFilesBody = re.search(PBXSourcesBuildPhaseFilesRegex, pbxSourcesBuildPhaseSectionBody).group(3)
-    pbxSourcesBuildPhaseFiles = re.findall(PBXSourcesBuildPhaseFileRegex, pbxSourcesBuildPhaseFilesBody)
-    elements = {}
-    for file in pbxSourcesBuildPhaseFiles:
-        fileRef = file[2]
-        value = file[1]
-        elements[fileRef] = value
-    sortedArray = sortElements(elements, order)
-    filesString = "\n".join(sortedArray)
-    pbxSourcesBuildPhaseSectionBody = re.sub(PBXSourcesBuildPhaseFilesRegex, r"\1\2" + filesString + r"\4\5", pbxSourcesBuildPhaseSectionBody, flags=re.IGNORECASE)
+    pbxSourcesBuildPhaseSections = re.findall(PBXSourcesBuildPhaseSectionsRegex, pbxSourcesBuildPhaseSectionBody)
+    for section in pbxSourcesBuildPhaseSections:
+        value = section[0]
+        pbxSourcesBuildPhaseFiles = re.findall(PBXSourcesBuildPhaseFileRegex, section[4])
+        elements = {}
+        for file in pbxSourcesBuildPhaseFiles:
+            fileRef = file[2]
+            fileValue = file[1]
+            elements[fileRef] = fileValue
+        sortedArray = sortElements(elements, order)
+        filesString = "\n".join(sortedArray)
+        updatedSection = re.sub(PBXSourcesBuildPhaseSectionsRegex, r"\2" + filesString + r"\6", value, flags=re.IGNORECASE)
+        pbxSourcesBuildPhaseSectionBody = re.sub(value, updatedSection, pbxSourcesBuildPhaseSectionBody, flags=re.IGNORECASE)
     updatedText = re.sub(PBXSourcesBuildPhaseSectionRegex, r"\1\2" + pbxSourcesBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 

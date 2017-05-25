@@ -105,6 +105,7 @@
 				7D94AE5C1EC108B900E09BFC /* Sources */,
 				7D94AE5D1EC108B900E09BFC /* Frameworks */,
 				7D94AE5E1EC108B900E09BFC /* Resources */,
+				7DD7D0491EC4CDDF00567D78 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -161,6 +162,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7DD7D0491EC4CDDF00567D78 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python pbxproj_organizer.py";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7D94AE5C1EC108B900E09BFC /* Sources */ = {
