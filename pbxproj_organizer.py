@@ -4,7 +4,7 @@
 # pbxproj_organizer.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 May 05
+# EDITED:  2017 May 25
 
 ##### CODE #####
 
@@ -234,12 +234,13 @@ def updatePBXFileReferenceSection(text, order):
 
 ### Regexes
 
-PBXFrameworksBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
-# 1 = (start of file)
-# 2 = PBXFrameworksBuildPhase files start
-# 3 = PBXFrameworksBuildPhase files body
-# 4 = PBXFrameworksBuildPhase files end
-# 5 = (end of file)
+PBXFrameworksBuildPhaseSectionsRegex = r"([ \t]*(\w+)?[ \t]*(\/\*\s*([\w \t]*)[ \t]*\*\/)?\s*=\s*\{\s*\n([^\}]*files\s*=\s*\(\s([^\)]*,)?\s*\)\s*;[^\}]*)\}\s*;[^\n]*)"
+# 1 = (value)
+# 2 = PBXFrameworksBuildPhase section ID
+# 3 = (unused)
+# 4 = PBXFrameworksBuildPhase section title
+# 5 = (unused)
+# 6 = PBXFrameworksBuildPhase files
 
 PBXFrameworksBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 # 1 = (start of file / newline)
@@ -247,19 +248,27 @@ PBXFrameworksBuildPhaseFileRegex = r"(^|\n)(\s*(\w*)\s*(\/\*[^,]*\*\/),)"
 # 3 = PBXFrameworksBuildPhase file ID
 # 4 = PBXFrameworksBuildPhase file name and directory
 
+PBXFrameworksBuildPhaseFilesRegex = r"([\S\s]*files\s*=\s*\([ \t]*\n)([\S\s]*,[ \t]*)\s*\n([ \t]*\)\s*;[\S\s]*)"
+# 1 = (start of file)
+# 2 = PBXFrameworksBuildPhase files section
+# 3 = (end of file)
+
 def updatePBXFrameworksBuildPhaseSection(text, order):
     PBXFrameworksBuildPhaseSectionRegex = generateSectionRegex("PBXFrameworksBuildPhase")
     pbxFrameworksBuildPhaseSectionBody = re.search(PBXFrameworksBuildPhaseSectionRegex, text).group(3)
-    pbxFrameworksBuildPhaseFilesBody = re.search(PBXFrameworksBuildPhaseFilesRegex, pbxFrameworksBuildPhaseSectionBody).group(3)
-    pbxFrameworksBuildPhaseFiles = re.findall(PBXFrameworksBuildPhaseFileRegex, pbxFrameworksBuildPhaseFilesBody)
-    elements = {}
-    for file in pbxFrameworksBuildPhaseFiles:
-        fileRef = file[2]
-        value = file[1]
-        elements[fileRef] = value
-    sortedArray = sortElements(elements, order)
-    filesString = "\n".join(sortedArray)
-    pbxFrameworksBuildPhaseSectionBody = re.sub(PBXFrameworksBuildPhaseFilesRegex, r"\1\2" + filesString + r"\4\5", pbxFrameworksBuildPhaseSectionBody, flags=re.IGNORECASE)
+    pbxFrameworksBuildPhaseSections = re.findall(PBXFrameworksBuildPhaseSectionsRegex, pbxFrameworksBuildPhaseSectionBody)
+    for section in pbxFrameworksBuildPhaseSections:
+        value = section[0]
+        pbxFrameworksBuildPhaseFiles = re.findall(PBXFrameworksBuildPhaseFileRegex, section[5])
+        elements = {}
+        for file in pbxFrameworksBuildPhaseFiles:
+            fileRef = file[2]
+            value = file[1]
+            elements[fileRef] = value
+        sortedArray = sortElements(elements, order)
+        filesString = "\n".join(sortedArray)
+        updatedSection = re.sub(PBXFrameworksBuildPhaseFilesRegex, r"\1" + filesString + r"\3", value, flags=re.IGNORECASE)
+        pbxFrameworksBuildPhaseSectionBody = re.sub(value, updatedSection, pbxFrameworksBuildPhaseSectionBody, flags=re.IGNORECASE)
     updatedText = re.sub(PBXFrameworksBuildPhaseSectionRegex, r"\1\2" + pbxFrameworksBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
