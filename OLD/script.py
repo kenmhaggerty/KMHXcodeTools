@@ -4,7 +4,7 @@
 # script.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 May 05
+# EDITED:  2017 May 30
 
 ##### IMPORTS
 
