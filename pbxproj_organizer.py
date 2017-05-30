@@ -207,7 +207,7 @@ def updatePBXFileReferenceSection(text, order):
 def updatePBXFrameworksBuildPhaseSection(text, order):
     return text
 
-##### PBXGroup Section
+##### PBXGroup Section #####
 
 ### Functions
 
