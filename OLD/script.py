@@ -4,7 +4,7 @@
 # script.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 May 05
+# EDITED:  2017 May 30
 
 ##### IMPORTS
 
@@ -15,19 +15,19 @@ from functions import *
 
 print "---------- STARTING PYTHON ----------"
 
-### Obtain .xcodeproj files
+# Obtain .xcodeproj files
 
 projects = glob.glob("*.xcodeproj")
 
 for project in projects:
 
-    ### Input
+    # Input
 
     filename = project + "/project.pbxproj"
     file = open(filename, "r+")
     text = "".join(file)
 
-    ### Processing
+    # Processing
 
     order = processPBXProjOrder(text)
 
@@ -38,7 +38,7 @@ for project in projects:
     text = updatePBXResourcesBuildPhaseSection(text, order)
     text = updatePBXSourcesBuildPhaseSection(text, order)
 
-    ### Save To File
+    # Save To File
 
     file.seek(0)
     file.write(text)
