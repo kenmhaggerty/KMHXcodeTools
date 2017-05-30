@@ -272,8 +272,6 @@ def updatePBXGroupSection(text, order):
 
 ##### PBXResourcesBuildPhase Section
 
-### Constants
-
 ### Regexes
 
 PBXResourcesBuildPhaseFilesRegex = r"(^|[\S\s]*\n)(\s*files\s*=\s*\(\s*\n)([\S\s]*,.*)(\n*\s*\)\s*;.*)([\S\s]*$)"
