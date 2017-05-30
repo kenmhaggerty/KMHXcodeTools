@@ -3,16 +3,17 @@
 # KMHXcodeTools
 # pbxproj_organizer.py
 # Ken M. Haggerty
-# CREATED: 2017 Mar 09
-# EDITED:  2017 May 05
+# VERSION : 1.0
+# CREATED : 2017 Mar 09
+# EDITED  : 2017 May 30
 
-##### CODE #####
+########## CODE ##########
 
-##### Imports
+##### Imports #####
 
 import re
 
-##### Shared
+##### Shared #####
 
 ### Constants
 
@@ -54,7 +55,7 @@ def sortElements(elements, order):
                 sortedArray.append(value)
     return sortedArray
 
-##### PBXProj Order
+##### PBXProj Order #####
 
 ### Constants
 
@@ -162,16 +163,7 @@ def generateChildren(node, source):
     dictionary[PBXGroupSectionChildrenKey] = children
     return dictionary
 
-##### PBXBuildFile Section
-
-### Constants
-
-# PBXBuildFileSectionIdKey = "id"
-# PBXBuildFileSectionFileRefKey = "fileRef"
-# PBXBuildFileSectionValueKey = "value"
-# PBXBuildFileSectionNameKey = "name"
-# PBXBuildFileSectionDirectoryKey = "directory"
-# PBXBuildFileSectionDictionaryKey = "dictionary"
+##### PBXBuildFile Section #####
 
 ### Regexes
 
@@ -201,7 +193,7 @@ def updatePBXBuildFileSection(text, order):
     updatedText = re.sub(PBXBuildFileSectionRegex, r"\1\2" + pbxBuildFileSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
-##### PBXFileReference Section
+##### PBXFileReference Section #####
 
 ### Regexes
 
@@ -228,7 +220,7 @@ def updatePBXFileReferenceSection(text, order):
     updatedText = re.sub(PBXFileReferenceSectionRegex, r"\1\2" + pbxFileReferenceSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
-##### PBXFrameworksBuildPhase Section
+##### PBXFrameworksBuildPhase Section #####
 
 ### Functions
 
@@ -263,7 +255,7 @@ def updatePBXFrameworksBuildPhaseSection(text, order):
     updatedText = re.sub(PBXFrameworksBuildPhaseSectionRegex, r"\1\2" + pbxFrameworksBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
-##### PBXGroup Section
+##### PBXGroup Section #####
 
 ### Functions
 
@@ -281,7 +273,7 @@ def updatePBXGroupSection(text, order):
     updatedText = re.sub(PBXGroupSectionRegex, r"\1\2" + pbxGroupSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
-##### PBXResourcesBuildPhase Section
+##### PBXResourcesBuildPhase Section #####
 
 ### Constants
 
@@ -318,7 +310,7 @@ def updatePBXResourcesBuildPhaseSection(text, order):
     updatedText = re.sub(PBXResourcesBuildPhaseSectionRegex, r"\1\2" + pbxResourcesBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
-##### PBXSourcesBuildPhase Section
+##### PBXSourcesBuildPhase Section #####
 
 ### Regexes
 
@@ -353,7 +345,7 @@ def updatePBXSourcesBuildPhaseSection(text, order):
     updatedText = re.sub(PBXSourcesBuildPhaseSectionRegex, r"\1\2" + pbxSourcesBuildPhaseSectionBody + r"\4\5", text, flags=re.IGNORECASE)
     return updatedText
 
-##### SCRIPT #####
+########## SCRIPT ##########
 
 ##### Imports
 
