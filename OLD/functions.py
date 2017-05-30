@@ -4,7 +4,7 @@
 # functions.py
 # Ken M. Haggerty
 # CREATED: 2017 Mar 09
-# EDITED:  2017 May 05
+# EDITED:  2017 May 30
 
 ##### IMPORTS
 
@@ -161,15 +161,6 @@ def generateChildren(node, source):
     return dictionary
 
 ##### PBXBuildFile Section
-
-### Constants
-
-# PBXBuildFileSectionIdKey = "id"
-# PBXBuildFileSectionFileRefKey = "fileRef"
-# PBXBuildFileSectionValueKey = "value"
-# PBXBuildFileSectionNameKey = "name"
-# PBXBuildFileSectionDirectoryKey = "directory"
-# PBXBuildFileSectionDictionaryKey = "dictionary"
 
 ### Regexes
 
