@@ -7,7 +7,6 @@ This Python script keeps your `project.pbxproj` file inside of your `<ProjectNam
 
 Copy pbxproj_organizer.py into your Xcode project's directory so it is a sibling of your `.xcodeproj` file. Then add the following Run Script to your Build Phases to have Xcode automatically keep your `project.pbxproj` file organized each time you build your app:
 
-Reference-style: 
 ![Xcode Run Script][img_runscript]
 
 or you can navigate to your project's directory and run it via the Terminal:
