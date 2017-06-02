@@ -5,7 +5,7 @@
 # Ken M. Haggerty
 # VERSION : 1.0
 # CREATED : 2017 May 30
-# EDITED  : 2017 May 30
+# EDITED  : 2017 Jun 02
 
 ########## CODE ##########
 
