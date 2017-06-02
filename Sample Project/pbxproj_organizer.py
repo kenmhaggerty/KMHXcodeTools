@@ -5,7 +5,7 @@
 # Ken M. Haggerty
 # VERSION : 1.0
 # CREATED : 2017 Mar 09
-# EDITED  : 2017 May 30
+# EDITED  : 2017 Jun 02
 
 ########## CODE ##########
 
@@ -82,9 +82,6 @@ PBXGroupSectionChildRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*((\S+.*\.\S+)|\S+[^\*\/]
 # 5 = PBXGroupSection name # temp
 # 6 = (unused)
 
-PBXBuildFileSectionRegex = r"\/\*\s*Begin\s*PBXBuildFile\s*section\s*\*\/\n*([\S\s]*)\n*\/\*\s*End\s*PBXBuildFile\s*section\s*\*\/"
-# 1 = PBXBuildFileSection body
-
 PBXBuildFileSectionLineRegex = r"(^|\n)\s*(\w*).*=\s*\{.*fileRef\s*=\s*(\w+).*\};"
 # 1 = (start of file / newline)
 # 2 = PBXBuildFile ID
@@ -96,7 +93,8 @@ def processPBXProjOrder(text):
     PBXGroupSectionRegex = generateSectionRegex("PBXGroup")
     pbxGroupSectionBody = re.search(PBXGroupSectionRegex, text).group(3)
     pbxGroupSections = re.findall(PBXGroupSectionGroupRegex, pbxGroupSectionBody)
-    pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(1)
+    PBXBuildFileSectionRegex = generateSectionRegex("PBXBuildFile");
+    pbxBuildFileSectionBody = re.search(PBXBuildFileSectionRegex, text).group(3)
     pbxBuildFileSectionLines = re.findall(PBXBuildFileSectionLineRegex, pbxBuildFileSectionBody)
     fileRefDictionary = {}
     for line in pbxBuildFileSectionLines:
