@@ -3,9 +3,9 @@
 # KMHXcodeTools
 # pbxproj_organizer.py
 # Ken M. Haggerty
-# VERSION : 1.0
+# VERSION : 1.1
 # CREATED : 2017 Mar 09
-# EDITED  : 2017 Jun 02
+# EDITED  : 2018 Nov 25
 
 ########## CODE ##########
 
@@ -130,7 +130,7 @@ def processPBXProjOrder(text):
         try: # temp
             name = section[4]
             dictionary[PBXGroupSectionNameKey] = name
-        except Exception: 
+        except Exception:
             pass
         elements[fileRef] = dictionary
         parentIds.update([fileRef])
@@ -366,7 +366,7 @@ import glob
 
 ##### Code
 
-print "---------- STARTING PYTHON ----------"
+# print "---------- STARTING PYTHON ----------"
 
 # Obtain .xcodeproj files
 
@@ -398,4 +398,4 @@ for project in projects:
     file.truncate()
     file.close()
 
-print "---------- PYTHON COMPLETE ----------"
+# print "---------- PYTHON COMPLETE ----------"
