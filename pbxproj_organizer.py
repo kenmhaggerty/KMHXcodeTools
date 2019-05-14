@@ -3,9 +3,9 @@
 # KMHXcodeTools
 # pbxproj_organizer.py
 # Ken M. Haggerty
-# VERSION : 1.1
+# VERSION : 1.2
 # CREATED : 2017 Mar 09
-# EDITED  : 2018 Nov 25
+# EDITED  : 2019 May 14
 
 ########## CODE ##########
 
@@ -63,7 +63,7 @@ PBXGroupSectionNameKey = "name" # temp
 
 ### Regexes
 
-PBXGroupSectionGroupRegex = r"(^|\n)([^\n\w]*(\w*)\s*(\/\*\s*(.*)\s*\*\/){0,1}\s*=\s*(\{[^\}]*\})\s*;[^\n]*)"
+PBXGroupSectionGroupRegex = r"(^|\n)([^\n\w]*(\w*)\s*(\/\*\s*(.*)\s*\*\/)?\s*=\s*(\{[^\}]*\})\s*;[^\n]*)"
 # 1 = (start of file / newline)
 # 2 = (value)
 # 3 = PBXGroupSection fileRef
@@ -165,7 +165,7 @@ def generateChildren(node, source):
 
 ### Regexes
 
-PBXBuildFileSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
+PBXBuildFileSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/)?\s*=?\s*(\{.*\})?\s*;)"
 # 1 = (start of file / newline)
 # 2 = (value)
 # 3 = PBXBuildFile ID
@@ -195,7 +195,7 @@ def updatePBXBuildFileSection(text, order):
 
 ### Regexes
 
-PBXFileReferenceSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/){0,1}\s*={0,1}\s*(\{[^\}]*\}){0,1}\s*;)"
+PBXFileReferenceSectionLineRegex = r"(^|\n)(\s*(\w*)\s*(\/\*\s*[^(\*\/)]*\s*\*\/)?\s*=?\s*(\{[^\}]*\})?\s*;)"
 # 1 = (start of file / newline)
 # 2 = (value)
 # 3 = PBXBuildFile reference ID
